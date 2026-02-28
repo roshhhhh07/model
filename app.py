@@ -31,13 +31,18 @@ def predict(data: TransportInput):
 
     df = pd.DataFrame([data.dict()])
 
-    for col in ["Route_Type", "Urban_Zone", "Season", "DayOfWeek"]:
+    categorical_cols = [
+        "Route_ID",
+        "Stop_ID",
+        "Route_Type",
+        "Urban_Zone",
+        "Season",
+        "DayOfWeek"
+    ]
+
+    for col in categorical_cols:
         df[col] = encoders[col].transform(df[col])
 
     pred = model.predict(df)[0]
 
     return {"Congestion_Index": float(pred)}
-
-@app.get("/")
-def home():
-    return {"status": "Transport ML API Live"}
